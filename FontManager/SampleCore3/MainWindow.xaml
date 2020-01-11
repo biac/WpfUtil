@@ -10,6 +10,11 @@
         
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+  <Window.Resources>
+    <Style TargetType="TextBlock">
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+  </Window.Resources>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -21,18 +26,18 @@
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
-    <Grid  Margin="10,5,5,0">
+    <Grid  Margin="20,5,20,0" Grid.ColumnSpan="2">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition />
       </Grid.ColumnDefinitions>
-      <TextBlock>BaseSize@Window</TextBlock>
+      <TextBlock Foreground="Crimson">BaseSize@Window=<Run Text="{Binding ElementName=Slider1, Path=Value, StringFormat=0.#}"/></TextBlock>
       <Slider x:Name="Slider1" Grid.Column="1" Margin="5,0,0,0"
               Minimum="5.0" Maximum="45.0" Value="15.0"
               AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
     </Grid>
 
-    <Grid  Grid.Column="1" Margin="5,5,10,0">
+    <!--<Grid  Grid.Column="1" Margin="5,5,10,0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition />
@@ -41,7 +46,7 @@
       <Slider x:Name="Slider2" Grid.Column="1" Margin="5,0,0,0"
               Minimum="6.0" Maximum="54.0" Value="18.0"
               AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
-    </Grid>
+    </Grid>-->
 
 
     <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center"  bw:FontManager.RelativeSize="3">
@@ -79,7 +84,8 @@
       <StackPanel>
         <TextBlock Foreground="Blue">RelativeSize not set</TextBlock>
         <TextBlock bw:FontManager.RelativeSize="1.0">RelativeSize=1.0</TextBlock>
-        <TextBlock bw:FontManager.RelativeSize="2.0" >Double Size</TextBlock>
+        <Button bw:FontManager.RelativeSize="1.5" HorizontalAlignment="Left">RelativeSize=1.5</Button>
+        <TextBox bw:FontManager.RelativeSize="2.0" >Double Size</TextBox>
         <GroupBox bw:FontManager.RelativeSize="1.5" Header="RelativeSize=1.5"
                   BorderBrush="Orange" BorderThickness="2">
           <StackPanel>
@@ -87,13 +93,35 @@
             <TextBlock bw:FontManager.RelativeSize="1.0">RelativeSize=1.0</TextBlock>
           </StackPanel>
         </GroupBox>
+        <StackPanel Background="PaleGoldenrod" Margin="0,5,0,0">
+          <StackPanel.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+              <Setter Property="bw:FontManager.RelativeSize" Value="2.0" />
+              <Setter Property="Foreground" Value="BlueViolet" />
+              <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+          </StackPanel.Resources>
+          <TextBlock>RelativeSize not set (=2.0 by Style)</TextBlock>
+          <TextBlock bw:FontManager.RelativeSize="1.5">RelativeSize=1.5 (overridden)</TextBlock>
+        </StackPanel>
       </StackPanel>
     </Grid>
     
     
-    <Border Grid.Row="2" Grid.Column="1" BorderBrush="LimeGreen" BorderThickness="3"  Margin="5,10,10,10">
+    <Border Grid.Row="2" Grid.Column="1" BorderBrush="LimeGreen" BorderThickness="3"  Margin="5,10,10,10" Padding="5">
     <StackPanel 
                 bw:FontManager.BaseSize="{Binding ElementName=Slider2, Path=Value}">
+        <Grid  Grid.Column="1" Margin="0,0,0,5">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <TextBlock Foreground="Crimson">BaseSize@Green Zone=<Run Text="{Binding ElementName=Slider2, Path=Value, StringFormat=0.#}" /></TextBlock>
+          <Slider x:Name="Slider2" Grid.Column="1" Margin="5,0,0,0"
+              Minimum="6.0" Maximum="54.0" Value="18.0"
+              AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
+        </Grid>
+
         <TextBlock Foreground="Blue">RelativeSize not set</TextBlock>
         <TextBlock bw:FontManager.RelativeSize="1.0">RelativeSize=1.0</TextBlock>
         <TextBlock bw:FontManager.RelativeSize="2.0" >RelativeSize=2.0</TextBlock>
