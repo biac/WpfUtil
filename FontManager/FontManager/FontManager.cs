@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -6,89 +6,71 @@ namespace BluewaterSoft.WpfUtil
 {
   public class FontManager : DependencyObject
   {
-    // *********************************
-    // ���ƁAAbsFontSize �Y�t�v���p�e�B��t����΁A���p�ɂȂ邩��?
-    // �ق�Ƃ́A������ Font �v���p�e�B�̐ݒ�𔻕ʂł���΁AOK �Ȃ񂾂��ǁc
-    // *********************************
-
-
-    //  public static DependencyProperty FontSizeProperty 
-    //    =
-    //Button.FontSizeProperty.AddOwner(typeof(FontManager),
-    //    new FrameworkPropertyMetadata(FontSizePropertyChanged)
-    //  );
-
-    //  private static void FontSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    //  {
-
-    //  }
-
-
-
-
     #region BaseSize
     private static readonly double DefaultBaseSize = SystemFonts.MessageFontSize;
     // It defaults to SystemFonts.MessageFontSize which has a default value of 12.
     // https://stackoverflow.com/a/48624542
 
-    public static readonly DependencyProperty BaseSizeProperty = DependencyProperty.RegisterAttached(
-"BaseSize",
-typeof(string),
-typeof(FontManager),
-  new FrameworkPropertyMetadata(
-    DefaultBaseSize.ToString(),
-    FrameworkPropertyMetadataOptions.Inherits | FrameworkPropertyMetadataOptions.AffectsMeasure |
-     FrameworkPropertyMetadataOptions.AffectsArrange,
-    BaseSizePropertyChanged)
-);
+    /// <summary>
+    /// BaseSize 添付プロパティ:
+    /// RelativeSize の基準となる FontSize を設定します。
+    /// 単位付記も可能です(px, pt, in, cm)。
+    /// 子要素に伝播します。
+    /// </summary>
+    public static readonly DependencyProperty BaseSizeProperty
+      = DependencyProperty.RegisterAttached(
+          "BaseSize",
+          typeof(string),
+          typeof(FontManager),
+          new FrameworkPropertyMetadata(
+            defaultValue: DefaultBaseSize.ToString(),
+            FrameworkPropertyMetadataOptions.Inherits
+            | FrameworkPropertyMetadataOptions.AffectsMeasure
+            | FrameworkPropertyMetadataOptions.AffectsArrange,
+            propertyChangedCallback: BaseSizePropertyChanged
+          )
+        );
 
     public static void SetBaseSize(FrameworkElement element, string value)
       => element.SetValue(BaseSizeProperty, value);
     public static string GetBaseSize(FrameworkElement element)
-    {
-      return (element != null) ? (string)element.GetValue(BaseSizeProperty)
-                                : DefaultBaseSize.ToString();
-    }
+      => (element != null) ? (string)element.GetValue(BaseSizeProperty)
+                           : DefaultBaseSize.ToString();
 
     private static void BaseSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      //if (d is FrameworkElement element)
-      //{
-      //  if (element.GetType().GetProperty("FontSize") == null)
-      //    return;
-      var element = GetElementHavingFontSizeProperty(d);
+      var element = GetFrameworkElementHavingFontSizeProperty(d);
       if (element == null)
         return;
 
-        double relativeSize = GetRelativeSize(element);
-      //if (double.IsNaN(relativeSize) || relativeSize <= 0.0)
-      //  return;
-
       string baseSizeString = e.NewValue as string;
-      //double baseSize = s2d(e.NewValue as string);
-      //((dynamic)element).FontSize = baseSize * relativeSize;
+      double relativeSize = GetRelativeSize(element);
       SetFontSize(element, baseSizeString, relativeSize);
-      //}
     }
     #endregion
 
 
-
-
-
     #region RelativeSize
-    public static readonly DependencyProperty RelativeSizeProperty = DependencyProperty.RegisterAttached(
-"RelativeSize",
-typeof(double),
-typeof(FontManager),
-  new FrameworkPropertyMetadata(
-    double.NaN,
-    FrameworkPropertyMetadataOptions.Inherits | FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange |
-     FrameworkPropertyMetadataOptions.AffectsParentMeasure |
-     FrameworkPropertyMetadataOptions.AffectsParentArrange,
-    RelativeSizePropertyChanged)
-);
-
+    /// <summary>
+    /// RelativeSize 添付プロパティ:
+    /// フォントサイズを RelativeSize を基準とした比率で設定します。
+    /// 子要素に伝播します。
+    /// </summary>
+    public static readonly DependencyProperty RelativeSizeProperty
+      = DependencyProperty.RegisterAttached(
+          "RelativeSize",
+          typeof(double),
+          typeof(FontManager),
+          new FrameworkPropertyMetadata(
+            defaultValue: double.NaN,
+            FrameworkPropertyMetadataOptions.Inherits
+            | FrameworkPropertyMetadataOptions.AffectsMeasure
+            | FrameworkPropertyMetadataOptions.AffectsArrange
+            | FrameworkPropertyMetadataOptions.AffectsParentMeasure
+            | FrameworkPropertyMetadataOptions.AffectsParentArrange,
+            propertyChangedCallback: RelativeSizePropertyChanged
+          )
+        );
 
     public static void SetRelativeSize(FrameworkElement element, double value)
       => element.SetValue(RelativeSizeProperty, value);
@@ -98,27 +80,63 @@ typeof(FontManager),
 
     private static void RelativeSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      //if (d is FrameworkElement element)
-      //{
-      //  if (element.GetType().GetProperty("FontSize") == null)
-      //    return;
-      var element = GetElementHavingFontSizeProperty(d);
+      var element = GetFrameworkElementHavingFontSizeProperty(d);
       if (element == null)
         return;
 
       double relativeSize = (double)e.NewValue;
-      //if (double.IsNaN(relativeSize) || relativeSize <= 0.0)
-      //  return;
-
-      //double baseSize = s2d(GetBaseSize(element));
-      //((dynamic)element).FontSize = baseSize * relativeSize;
       SetFontSize(element, GetBaseSize(element), relativeSize);
-
-      //}
     }
     #endregion
 
-    private static FrameworkElement GetElementHavingFontSizeProperty(DependencyObject d)
+    #region AbsoluteSize
+    /// <summary>
+    /// AbsoluteSize 添付プロパティ:
+    /// フォントサイズを絶対値で設定します。
+    /// 本来の FontSize プロパティと同じ意味です。
+    /// 子要素に伝播しません。
+    /// </summary>
+    public static readonly DependencyProperty AbsoluteSizeProperty
+      = DependencyProperty.RegisterAttached(
+          "AbsoluteSize",
+          typeof(string),
+          typeof(FontManager),
+          new FrameworkPropertyMetadata(
+            defaultValue: null,
+            FrameworkPropertyMetadataOptions.AffectsMeasure
+            | FrameworkPropertyMetadataOptions.AffectsArrange
+            | FrameworkPropertyMetadataOptions.AffectsParentMeasure
+            | FrameworkPropertyMetadataOptions.AffectsParentArrange,
+            propertyChangedCallback: AbsoluteSizePropertyChanged
+          )
+        );
+
+    public static void SetAbsoluteSize(FrameworkElement element, string value)
+      => element.SetValue(AbsoluteSizeProperty, value);
+    public static string GetAbsoluteSize(FrameworkElement element)
+      => element?.GetValue(AbsoluteSizeProperty) as string;
+
+    private static void AbsoluteSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+      var element = GetFrameworkElementHavingFontSizeProperty(d);
+      if (element == null)
+        return;
+
+      var absoluteSizeString = e.NewValue as string;
+      if (string.IsNullOrWhiteSpace(absoluteSizeString))
+      {
+        ((dynamic)element).FontSize = DefaultBaseSize;
+        return;
+      }
+
+      double absoluteSize = s2d(e.NewValue as string);
+      ((dynamic)element).FontSize = absoluteSize;
+    }
+    #endregion
+
+
+
+    private static FrameworkElement GetFrameworkElementHavingFontSizeProperty(DependencyObject d)
     {
       if (d is FrameworkElement element
           && element.GetType().GetProperty("FontSize") != null)
@@ -139,24 +157,9 @@ typeof(FontManager),
       ((dynamic)element).FontSize = baseSize * relativeSize;
     }
 
-
-    //private static double GetBaseSizeByDouble(DependencyObject element)
-    //{
-    //  //string baseSize = GetBaseSize(element as FrameworkElement);
-    //  return s2d(GetBaseSize(element as FrameworkElement));
-    //}
-
     private static readonly FontSizeConverter _fontSizeConverter
       = new FontSizeConverter();
     private static double s2d(string fontSize)
-    {
-      return (double)_fontSizeConverter.ConvertFromString(fontSize);
-    }
-
-    //private static void SetFontSizeWhenAble(DependencyObject o, double fontSize)
-    //{
-    //  if (o.GetType().GetProperty("FontSize") != null)
-    //    ((dynamic)o).FontSize = fontSize;
-    //}
+     => (double)_fontSizeConverter.ConvertFromString(fontSize);
   }
 }

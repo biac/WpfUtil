@@ -9,7 +9,7 @@
         bw:FontManager.BaseSize="{Binding ElementName=Slider1, Path=Value}"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="FontManager example" Height="600" Width="800">
   <Window.Resources>
     <Style TargetType="TextBlock">
       <Setter Property="TextWrapping" Value="Wrap" />
@@ -36,18 +36,6 @@
               Minimum="5.0" Maximum="45.0" Value="15.0"
               AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
     </Grid>
-
-    <!--<Grid  Grid.Column="1" Margin="5,5,10,0">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition />
-      </Grid.ColumnDefinitions>
-      <TextBlock>BaseSize@Green Zone</TextBlock>
-      <Slider x:Name="Slider2" Grid.Column="1" Margin="5,0,0,0"
-              Minimum="6.0" Maximum="54.0" Value="18.0"
-              AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
-    </Grid>-->
-
 
     <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center"  bw:FontManager.RelativeSize="3">
     <TextBlock x:Name="HeaderText1" 
@@ -104,6 +92,12 @@
           <TextBlock>RelativeSize not set (=2.0 by Style)</TextBlock>
           <TextBlock bw:FontManager.RelativeSize="1.5">RelativeSize=1.5 (overridden)</TextBlock>
         </StackPanel>
+        <StackPanel Margin="0,5,0,0">
+          <TextBlock bw:FontManager.AbsoluteSize="15">AbsoluteSize=15</TextBlock>
+          <TextBlock bw:FontManager.AbsoluteSize="15px">AbsoluteSize=15px</TextBlock>
+          <TextBlock bw:FontManager.AbsoluteSize="15pt">AbsoluteSize=15pt</TextBlock>
+          <TextBlock bw:FontManager.AbsoluteSize="0.5cm">AbsoluteSize=0.5cm</TextBlock>
+        </StackPanel>
       </StackPanel>
     </Grid>
     
@@ -126,7 +120,12 @@
         <TextBlock bw:FontManager.RelativeSize="1.0">RelativeSize=1.0</TextBlock>
         <TextBlock bw:FontManager.RelativeSize="2.0" >RelativeSize=2.0</TextBlock>
         <TextBlock bw:FontManager.RelativeSize="3.0" >Triple Size</TextBlock>
-    </StackPanel>
+
+        <TextBlock bw:FontManager.AbsoluteSize="15">AbsoluteSize=15</TextBlock>
+        <TextBlock bw:FontManager.AbsoluteSize="15px">AbsoluteSize=15px</TextBlock>
+        <TextBlock bw:FontManager.AbsoluteSize="15pt">AbsoluteSize=15pt</TextBlock>
+        <TextBlock bw:FontManager.AbsoluteSize="0.5cm">AbsoluteSize=0.5cm</TextBlock>
+      </StackPanel>
     </Border>
   </Grid>
 </Window>
