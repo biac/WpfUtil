@@ -15,7 +15,6 @@ namespace BluewaterSoft.WpfUtil
     /// BaseSize 添付プロパティ:
     /// RelativeSize の基準となる FontSize を設定します。
     /// 単位付記も可能です(px, pt, in, cm)。
-    /// 子要素に伝播します。
     /// </summary>
     public static readonly DependencyProperty BaseSizeProperty
       = DependencyProperty.RegisterAttached(
@@ -54,7 +53,6 @@ namespace BluewaterSoft.WpfUtil
     /// <summary>
     /// RelativeSize 添付プロパティ:
     /// フォントサイズを RelativeSize を基準とした比率で設定します。
-    /// 子要素に伝播します。
     /// </summary>
     public static readonly DependencyProperty RelativeSizeProperty
       = DependencyProperty.RegisterAttached(
@@ -94,7 +92,6 @@ namespace BluewaterSoft.WpfUtil
     /// AbsoluteSize 添付プロパティ:
     /// フォントサイズを絶対値で設定します。
     /// 本来の FontSize プロパティと同じ意味です。
-    /// 子要素に伝播しません。
     /// </summary>
     public static readonly DependencyProperty AbsoluteSizeProperty
       = DependencyProperty.RegisterAttached(
