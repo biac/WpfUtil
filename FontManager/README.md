@@ -3,7 +3,8 @@
 Allows you to describe font size by relative value when writing XAML code.  
 XAML において、 相対値でフォントサイズを記述できるようにする。
 
-<a href="./images/fig01.png" target="_blank"><img src="./images/fig01s.png" /></a>
+<a href="./images/fig01.png" target="_blank"><img src="./images/fig01s.png" /></a>  
+([Sample Code](./SampleCore3) execution example)
 
 ### :boat: __Example__
 
