@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BluewaterSoft.WpfUtil.FontManager</name>
+    </assembly>
+    <members>
+        <member name="T:BluewaterSoft.WpfUtil.FontSize">
+            <summary>
+            <para xml:lang="ja">XAML において、 相対値でフォントサイズを記述できるようにする。</para>
+            <para xml:lang="en">Allows you to describe font size by relative value when writing XAML code.</para>
+            </summary>
+        </member>
+        <member name="F:BluewaterSoft.WpfUtil.FontSize.BaseProperty">
+            <summary>
+            <para xml:lang="ja">Relative サイズの基準となる Font サイズです。 単位記号も付記できます (px, pt, in, cm)。</para>
+            <para xml:lang="en">Font size on which Relative size is based. Unit symbol (px, pt, in, cm) may be added.</para>
+            </summary>
+        </member>
+        <member name="M:BluewaterSoft.WpfUtil.FontSize.SetBase(System.Windows.FrameworkElement,System.String)">
+            <summary>Setter for BaseProperty</summary>
+        </member>
+        <member name="M:BluewaterSoft.WpfUtil.FontSize.GetBase(System.Windows.FrameworkElement)">
+            <summary>Getter for BaseProperty</summary>
+        </member>
+        <member name="F:BluewaterSoft.WpfUtil.FontSize.RelativeProperty">
+            <summary>
+            <para xml:lang="ja">Base サイズの倍率で表されるフォントサイズ。</para>
+            <para xml:lang="en">Font size expressed as a magnification of the Base size.</para>
+            </summary>
+        </member>
+        <member name="M:BluewaterSoft.WpfUtil.FontSize.SetRelative(System.Windows.FrameworkElement,System.Double)">
+            <summary>Setter for RelativeProperty</summary>
+        </member>
+        <member name="M:BluewaterSoft.WpfUtil.FontSize.GetRelative(System.Windows.FrameworkElement)">
+            <summary>Getter for RelativeProperty</summary>
+        </member>
+        <member name="F:BluewaterSoft.WpfUtil.FontSize.AbsoluteProperty">
+            <summary>
+            <para xml:lang="ja">実際の値で表されるフォントサイズ。本来の FontSize プロパティと同じ意味です。</para>
+            <para xml:lang="en">Font size expressed as a real value. Same meaning as the traditional FontSize property.</para>
+            </summary>
+        </member>
+        <member name="M:BluewaterSoft.WpfUtil.FontSize.SetAbsolute(System.Windows.FrameworkElement,System.String)">
+            <summary>Setter for AbsoluteProperty</summary>
+        </member>
+        <member name="M:BluewaterSoft.WpfUtil.FontSize.GetAbsolute(System.Windows.FrameworkElement)">
+            <summary>Getter for AbsoluteProperty</summary>
+        </member>
+    </members>
+</doc>

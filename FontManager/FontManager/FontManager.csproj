@@ -8,4 +8,16 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DocumentationFile>D:\projects\BluewaterSoftProjects\OSS\WpfUtil\FontManager\FontManager\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\projects\BluewaterSoftProjects\OSS\WpfUtil\FontManager\FontManager\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Surviveplus.XmlCommentLocalization" Version="1.0.6.2" />
+  </ItemGroup>
+
 </Project>
