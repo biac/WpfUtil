@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,11 +9,19 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DocumentationFile>D:\projects\BluewaterSoftProjects\OSS\WpfUtil\FontManager\FontManager\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
+    <DocumentationFile>.\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\projects\BluewaterSoftProjects\OSS\WpfUtil\FontManager\FontManager\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
+    <DocumentationFile>.\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DocumentationFile>.\BluewaterSoft.WpfUtil.FontManager.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

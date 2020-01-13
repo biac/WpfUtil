@@ -49,8 +49,7 @@
       </TextBlock.Effect>
       FontManager
     </TextBlock>
-    <TextBlock 
-               FontWeight="Bold" 
+    <TextBlock FontWeight="Bold"
                Text="{Binding ElementName=HeaderText1, Path=Text}"
                >
       <TextBlock.Effect>
