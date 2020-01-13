@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Documents;
+using System.Windows.Controls;
 
 namespace BluewaterSoft.WpfUtil
 {
@@ -28,9 +28,10 @@ namespace BluewaterSoft.WpfUtil
             defaultValue: DefaultBaseSize.ToString(),
             FrameworkPropertyMetadataOptions.Inherits
             | FrameworkPropertyMetadataOptions.AffectsMeasure
-            | FrameworkPropertyMetadataOptions.AffectsArrange,
+            | FrameworkPropertyMetadataOptions.AffectsRender,
             propertyChangedCallback: BaseSizePropertyChanged
-          )
+          ),
+          validateValueCallback: o => (o is string s && FontSizeStringToDouble(s) > 0.0)
         );
 
     /// <summary>Setter for BaseProperty</summary>
@@ -44,12 +45,8 @@ namespace BluewaterSoft.WpfUtil
     private static void BaseSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       var element = GetFrameworkElementHavingFontSizeProperty(d);
-      if (element == null)
-        return;
-
-      string baseSizeString = e.NewValue as string;
-      double relativeSize = GetRelative(element);
-      SetFontSize(element, baseSizeString, relativeSize);
+      if (element != null)
+        SetFontSize(element);
     }
     #endregion
 
@@ -68,11 +65,10 @@ namespace BluewaterSoft.WpfUtil
             defaultValue: double.NaN,
             FrameworkPropertyMetadataOptions.Inherits
             | FrameworkPropertyMetadataOptions.AffectsMeasure
-            | FrameworkPropertyMetadataOptions.AffectsArrange
-            | FrameworkPropertyMetadataOptions.AffectsParentMeasure
-            | FrameworkPropertyMetadataOptions.AffectsParentArrange,
+            | FrameworkPropertyMetadataOptions.AffectsRender,
             propertyChangedCallback: RelativeSizePropertyChanged
-          )
+          ),
+          validateValueCallback: o => (o is double r && (double.IsNaN(r) || r > 0.0))
         );
 
     /// <summary>Setter for RelativeProperty</summary>
@@ -80,17 +76,13 @@ namespace BluewaterSoft.WpfUtil
       => element.SetValue(RelativeProperty, value);
     /// <summary>Getter for RelativeProperty</summary>
     public static double GetRelative(FrameworkElement element)
-      => (element != null) ? (double)element.GetValue(RelativeProperty)
-                           : double.NaN;
+      => (double)(element?.GetValue(RelativeProperty) ?? double.NaN);
 
     private static void RelativeSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       var element = GetFrameworkElementHavingFontSizeProperty(d);
-      if (element == null)
-        return;
-
-      double relativeSize = (double)e.NewValue;
-      SetFontSize(element, GetBase(element), relativeSize);
+      if (element != null)
+        SetFontSize(element);
     }
     #endregion
 
@@ -107,12 +99,19 @@ namespace BluewaterSoft.WpfUtil
           new FrameworkPropertyMetadata(
             defaultValue: null,
             FrameworkPropertyMetadataOptions.AffectsMeasure
-            | FrameworkPropertyMetadataOptions.AffectsArrange
-            | FrameworkPropertyMetadataOptions.AffectsParentMeasure
-            | FrameworkPropertyMetadataOptions.AffectsParentArrange,
+            | FrameworkPropertyMetadataOptions.AffectsRender,
             propertyChangedCallback: AbsoluteSizePropertyChanged
-          )
+          ),
+          validateValueCallback: IsValidAbsoluteFontSizeString
         );
+
+    private static bool IsValidAbsoluteFontSizeString(object value)
+    {
+      if (value == null)
+        return true;
+
+      return (value is string s && FontSizeStringToDouble(s) > 0.0);
+    }
 
     /// <summary>Setter for AbsoluteProperty</summary>
     public static void SetAbsolute(FrameworkElement element, string value)
@@ -125,17 +124,9 @@ namespace BluewaterSoft.WpfUtil
     {
       var element = GetFrameworkElementHavingFontSizeProperty(d);
       if (element == null)
-        return;
+        throw new InvalidOperationException($"{d.DependencyObjectType.Name} has no FontSize property.");
 
-      var absoluteSizeString = e.NewValue as string;
-      if (string.IsNullOrWhiteSpace(absoluteSizeString))
-      {
-        ((dynamic)element).FontSize = DefaultBaseSize;
-        return;
-      }
-
-      double absoluteSize = s2d(e.NewValue as string);
-      ((dynamic)element).FontSize = absoluteSize;
+      SetFontSize(element);
     }
     #endregion
 
@@ -150,21 +141,63 @@ namespace BluewaterSoft.WpfUtil
       return null;
     }
 
-    private static void SetFontSize(FrameworkElement element, string baseSizeString, double relativeSize)
+    private static void SetFontSize(FrameworkElement element)
     {
-      if (double.IsNaN(relativeSize) || relativeSize <= 0.0)
+      if (GetAbsolute(element) is string absString)
+      {
+        ((dynamic)element).FontSize = FontSizeStringToDouble(absString);
         return;
+      }
 
-      double baseSize = s2d(baseSizeString);
-      if (double.IsNaN(baseSize) || baseSize <= 0.0)
-        return;
+      if (GetBase(element) is string baseString)
+      {
+        double baseSize = FontSizeStringToDouble(baseString);
+        double relative = GetRelative(element);
+        if (!double.IsNaN(relative))
+        {
+          ((dynamic)element).FontSize = baseSize * relative;
+          return;
+        }
+      }
 
-      ((dynamic)element).FontSize = baseSize * relativeSize;
+      ResetFontSizeProperty(element);
+      return;
+
+      static void ResetFontSizeProperty(FrameworkElement element)
+      {
+        // There are other controls having FontSizeProperty, but they are not FrameworkElements.
+        switch (element)
+        {
+          case TextBlock e:
+            e.ClearValue(TextBlock.FontSizeProperty);
+            break;
+          case Control e:
+            e.ClearValue(Control.FontSizeProperty);
+            break;
+          case AccessText e:
+            e.ClearValue(AccessText.FontSizeProperty);
+            break;
+          case Page e:
+            e.ClearValue(Page.FontSizeProperty);
+            break;
+        }
+      }
     }
 
-    private static readonly FontSizeConverter _fontSizeConverter
-      = new FontSizeConverter();
-    private static double s2d(string fontSize)
-      => (double)_fontSizeConverter.ConvertFromString(fontSize);
+    private static FontSizeConverter _fontSizeConverter;
+    private static double FontSizeStringToDouble(string fontSize)
+    {
+      if (string.IsNullOrWhiteSpace(fontSize))
+        return double.NaN;
+
+      try {
+        return (double)
+                (_fontSizeConverter ??= new FontSizeConverter())
+                .ConvertFromString(fontSize);
+      }
+      catch {
+        return double.NaN;
+      }
+    }
   }
 }

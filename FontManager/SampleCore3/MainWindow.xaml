@@ -7,7 +7,7 @@
         
         xmlns:bw="clr-namespace:BluewaterSoft.WpfUtil;assembly=BluewaterSoft.WpfUtil.FontManager"
         bw:FontSize.Base="{Binding ElementName=Slider1, Path=Value}"
-        
+
         mc:Ignorable="d"
         Title="FontManager example" Height="600" Width="800">
   <Window.Resources>
@@ -32,7 +32,7 @@
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition />
       </Grid.ColumnDefinitions>
-      <TextBlock Foreground="Crimson">Base font size@Window=<Run Text="{Binding ElementName=Slider1, Path=Value, StringFormat=0.#}"/></TextBlock>
+      <TextBlock Foreground="Crimson">Base font size@Window=<Run Text="{Binding ElementName=Slider1, Path=Value, StringFormat=00.0}"/></TextBlock>
       <Slider x:Name="Slider1" Grid.Column="1" Margin="5,0,0,0"
               Minimum="5.0" Maximum="45.0" Value="15.0"
               AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
@@ -40,7 +40,7 @@
 
     <!-- Header text -->
     <Grid Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center"  bw:FontSize.Relative="3">
-    <TextBlock x:Name="HeaderText1" 
+    <TextBlock x:Name="HeaderText1"
                Foreground="White" FontWeight="Bold"
                >
       <TextBlock.Effect>
@@ -113,7 +113,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
           </Grid.ColumnDefinitions>
-          <TextBlock Foreground="Crimson">Base font size@Green Zone=<Run Text="{Binding ElementName=Slider2, Path=Value, StringFormat=0.#}" /></TextBlock>
+          <TextBlock Foreground="Crimson">Base font size@Green Zone=<Run Text="{Binding ElementName=Slider2, Path=Value, StringFormat=00.0}" /></TextBlock>
           <Slider x:Name="Slider2" Grid.Column="1" Margin="5,0,0,0"
               Minimum="6.0" Maximum="54.0" Value="18.0"
               AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="1"/>
