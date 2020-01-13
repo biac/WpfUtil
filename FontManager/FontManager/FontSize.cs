@@ -39,8 +39,7 @@ namespace BluewaterSoft.WpfUtil
       => element.SetValue(BaseProperty, value);
     /// <summary>Getter for BaseProperty</summary>
     public static string GetBase(FrameworkElement element)
-      => (element != null) ? (string)element.GetValue(BaseProperty)
-                           : DefaultBaseSize.ToString();
+      => element?.GetValue(BaseProperty) as string ?? DefaultBaseSize.ToString();
 
     private static void BaseSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
